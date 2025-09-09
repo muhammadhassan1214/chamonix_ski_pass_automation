@@ -1,0 +1,39 @@
+{
+  "order_id": 12345,
+  "order_key": "wc_order_ABC123",
+  "portal": "CMB",
+  "product": {
+    "tariff_group": "ADULT",
+    "product_category": "FULL_AREA",
+    "duration_days": 1,
+    "start_date": "2025-12-15",
+    "area_label": "Full Area",
+    "canal": "ONLINE",
+    "station_code": "CHAMONIX",
+    "earlybird": false
+  },
+  "guests": [
+    {
+      "first_name": "Jane",
+      "last_name": "Doe",
+      "date_of_birth": "1990-04-12"
+    }
+  ],
+  "options": {
+    "insurance": false
+  },
+  "contact": {
+    "email": "customer@example.com",
+    "phone": "+33123456789"
+  },
+  "notes": "Order note if any",
+  "source": {
+    "woo_items": [
+      {
+        "line_item_id": 9876,
+        "sku": "PASS-ADULT-1D-FA",
+        "qty": 1
+      }
+    ]
+  }
+}

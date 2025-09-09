@@ -14,7 +14,6 @@ from selenium.common.exceptions import (
     TimeoutException, NoSuchElementException, WebDriverException,
     ElementNotInteractableException, StaleElementReferenceException
 )
-import undetected_chromedriver as uc
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
@@ -346,3 +345,19 @@ def get_element_attribute(driver, by_locator, attribute: str, timeout: int = 10,
     except Exception as e:
         logger.error(f"Error getting element attribute '{attribute}': {e}")
         return default
+
+
+def handle_pop_up(driver, by_locator, timeout: int = 5) -> bool:
+    """Handle pop-up if it appears."""
+    try:
+        element = WebDriverWait(driver, timeout).until(EC.element_to_be_clickable(by_locator))
+        element.click()
+        time.sleep(0.5)
+        logger.info("Pop-up handled successfully")
+        return True
+    except TimeoutException:
+        logger.info("No pop-up appeared")
+        return True  # No pop-up to handle
+    except Exception as e:
+        logger.error(f"Error handling pop-up: {e}")
+        return False

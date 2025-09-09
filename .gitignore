@@ -1,5 +1,5 @@
 venv
-Utils/chrome-dir
+chrome-dir
 .idea
 __pycache__
 .env

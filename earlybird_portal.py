@@ -19,15 +19,15 @@ load_dotenv()
 
 logger = logging.getLogger(__name__)
 
-class CBMPortalBot:
+class EARLYBIRDPortalBot:
     def __init__(self):
         self.driver = None
-        self.base_url = "https://bo.jbsurf.com/Admin/BOAngularV2.aspx"
-        self.username = os.getenv('CBM_USERNAME')
-        self.password = os.getenv('CBM_PASSWORD')
+        self.base_url = "https://partenaire.montblancnaturalresort.ski/offre-earlybooking/"
+        self.username = os.getenv('EARLYBIRD_USERNAME')
+        self.password = os.getenv('EARLYBIRD_PASSWORD')
 
         if not self.username or not self.password:
-            raise ValueError("CBM credentials not found in environment variables")
+            raise ValueError("EARLYBIRD credentials not found in environment variables")
 
     def initialize_driver(self) -> bool:
         """Initialize the Chrome driver."""
@@ -50,24 +50,24 @@ class CBMPortalBot:
     def login(self) -> bool:
         """Log in to the CBM portal."""
         try:
-            already_logged_in = check_element_exists(self.driver, (By.XPATH, "(//a[contains(text(), 'B2B')])[1]"))
-            if already_logged_in:
-                logger.info("Already logged in")
-                return True
             safe_navigate_to_url(self.driver, self.base_url)
             wait_for_page_load(self.driver)
             time.sleep(5)  # wait for potential redirects
-
+            already_logged_in = check_element_exists(self.driver, (By.XPATH, "//h1[contains(text(), 'EB – AD & Co')]"))
+            if already_logged_in:
+                logger.info("Already logged in")
+                return True
             # Find and fill the username and password fields
-            input_element(self.driver, (By.XPATH, "//input[@type= 'text']"), self.username)
-            input_element(self.driver, (By.XPATH, "//input[@type= 'password']"), self.password)
+            handle_pop_up(self.driver, (By.ID, "tarteaucitronPersonalize2"))
+            input_element(self.driver, (By.ID, "mat-input-0"), self.username)
+            click_element_by_js(self.driver, (By.XPATH, f"//span[contains(text(), '{self.username}')]"))
+            input_element(self.driver, (By.ID, "password"), self.password)
 
             # Click the login button
-            click_element_by_js(self.driver, (By.XPATH, "//button[contains(text(), 'Se connecter')]"))
+            click_element_by_js(self.driver, (By.XPATH, "//button[contains(text(), 'Connexion')]"))
 
             # Wait for navigation after login
             wait_for_page_load(self.driver)
-            handle_pop_up(self.driver, (By.XPATH, "//button[contains(text(), 'FERMER')]"))
 
             logger.info("Login successful")
             return True
@@ -85,11 +85,12 @@ class CBMPortalBot:
     def process_order(self, order_data: Dict[str, Any]) -> Dict[str, Any]:
         """Main method to process an order."""
         try:
-            click_element_by_js(self.driver, (By.XPATH, "(//a[contains(text(), 'B2B')])[1]"))
-            click_element_by_js(self.driver, (By.XPATH, "//a[contains(text(), 'Traitement de commande individuelle')]"))
-            wait_for_page_load(self.driver)
-            input_element(self.driver, (By.XPATH, "//input[@aria-label= 'Station']"), 'Aiguille')
-            click_element_by_js(self.driver, (By.XPATH, "//span[contains(text(), 'Aiguille')]"))
+            # For now, return a mock successful result
+            # TODO: Implement actual portal automation
+            logger.info(f"Mock processing order: {order_data.get('order_id')}")
+
+            # Simulate processing time
+            time.sleep(2)
 
             return {
                 'success': True,
